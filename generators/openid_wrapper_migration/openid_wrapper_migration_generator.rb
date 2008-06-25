@@ -1,4 +1,4 @@
-class OpenidGenerator < Rails::Generator::Base
+class OpenidWrapperMigrationGenerator < Rails::Generator::Base
   def initilize(runtime_args, runtime_options = {})
     super
   end
