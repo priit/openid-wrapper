@@ -25,7 +25,7 @@ module Authentication
     def logged_in?
       current_user ? true : false
     end
-
+    
 
 # before_filters for controllers
   def login_required
