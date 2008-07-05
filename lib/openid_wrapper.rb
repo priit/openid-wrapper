@@ -9,9 +9,10 @@ module OpenidWrapper
   end
 
 protected
-  def openid_request(options = {}, &check_user)
+  def create_openid(options = {}, &check_user)
     options.assert_valid_keys(
-      :openid_identifier, :return_url, :error_redirect, :realm, :immediate_mode, :required, :optional
+      :openid_identifier, :return_url, :error_redirect, :realm,
+      :immediate_mode, :required, :optional, :return_to_args
     )
     
     # trying to be as flexible as possible
@@ -20,6 +21,10 @@ protected
     error_redirect = options[:error_redirect] || new_user_path
     realm      = options[:realm]              || (self.request.protocol + '*.' + self.request.domain)
     immediate  = options[:immediate_mode]     || params[:immediate_mode] || false
+
+    # return_to_args is for additional stuff you need to pass around to complete method,
+    # it serves similar prupose as session
+    return_to_args = options[:return_to_args] || {}
 
     begin
       @openid_request = consumer.begin(identifier.strip)
@@ -38,22 +43,14 @@ protected
       yield normalized_identifier
     end
 
-    openid_add_extra_arguments :subdomain => 'http://TEST.com'
-    
-    # @openid_request.return_to_args['subdomain'] = 'http://test'
+    add_return_to_args(return_to_args)
+
     redirect_to @openid_request.redirect_url(realm, return_url, immediate)
   end
   
-  def openid_add_extra_arguments(args)
-    # debugger
-    return nil if @openid_request.nil?
-
-    args.each do |key,value|
-      @openid_request.return_to_args[key.to_s] = value.to_s
-    end
-  end
-
-  def openid_response
+  alias :begin_openid :create_openid
+  
+  def complete_openid
     # The return_to and its arguments are verified, so you need to pass in
     # the base URL and the arguments.  With Rails, the params method mashes
     # together parameters from GET, POST, and the path, so you'll need to pull
@@ -113,5 +110,13 @@ private
     sreg_request.request_fields(required, true) if required.size > 0
     sreg_request.request_fields(optional, false) if optional.size > 0
     return sreg_request
+  end
+
+  def add_return_to_args(args)
+    return nil if @openid_request.nil?
+    
+    args.each do |key,value|
+      @openid_request.return_to_args[key.to_s] = value.to_s
+    end
   end
 end
