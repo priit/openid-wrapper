@@ -25,9 +25,17 @@ Then add it to config/environment.rb:
   config.gem 'openid_wrapper'
 
 
-
 Additional Notes
 ================
+
+OpenID is pushed to three different hostings:
+
+  main repository: 
+    http://gitorious.org/projects/openid-wrapper
+
+  secondary repositories: 
+    http://rubyforge.org/projects/openid-wrapper/ 
+    http://github.com/priit/openid-wrapper/
 
 OpenID Wrapper will generate log entry:
   
