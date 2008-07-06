@@ -1,4 +1,3 @@
-Copyright (c) 2008 Priit Tamboom, released under the MIT license
 
 OpenidWrapper
 =============
@@ -59,3 +58,6 @@ History and Credits
 [1] http://svn.rubyonrails.org/rails/plugins/open_id_authentication/
 [2] http://code.google.com/p/open-id-authentication/
 [3] http://gitorious.org/projects/openid-wrapper/ 
+
+Copyright (c) 2008 Priit Tamboom, released under the MIT license
+
