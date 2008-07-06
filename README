@@ -12,6 +12,9 @@ old way of username-password authentication.
 Installation
 ============
 
+NB! OPENID WRAPPER IS NOT READY, SO NO GEM INSTALL YET!
+I pushed it up for people who would like to review code and give some ideas to improve this initial stuff. 
+
 
 Start with:
 
