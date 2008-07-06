@@ -3,13 +3,48 @@ Copyright (c) 2008 Priit Tamboom, released under the MIT license
 OpenidWrapper
 =============
 
-Introduction goes here.
+Thin OpenID Wrapper for Ruby on Rails using ruby-openid gem.
 
-More info about OpenID
-======================
+Just for note this wrapper might not be the quickest fit for you if you also need 
+old way of username-password authentication.
+
+
+Installation
+============
+
+
+Start with:
+
+  sudo gem install openid-wrapper
+
+Then add it to config/environment.rb:
+  
+  config.gem 'openid_wrapper'
+
+
+
+Additional Notes
+================
+
+OpenID Wrapper will generate log entry:
+  
+  ** openid_wrapper: initialized properly.
+
+
+General Info about OpenID
+=========================
 
 OpenID Authentication 2.0 - final specifications
 http://openid.net/specs/openid-authentication-2_0.html
 
-Example
-=======
+
+History and Credits
+===================
+
+ * OpenID Authentication plugin stared by David Heinemeier Hansson. [1]
+ * Alex Gorbatchev made rewrite and complete clean up without changing original API. [2]
+ * Priit Tamboom made complete API change as well and gemified it. [3]
+
+[1] http://svn.rubyonrails.org/rails/plugins/open_id_authentication/
+[2] http://code.google.com/p/open-id-authentication/
+[3] http://gitorious.org/projects/openid-wrapper/ 
