@@ -1,19 +1,28 @@
-
 OpenidWrapper
 =============
 
 Thin OpenID Wrapper for Ruby on Rails using ruby-openid gem.
 
-Just for note this wrapper might not be the quickest fit for you if you also need 
-old way of username-password authentication.
+The goal is to have openid consumer wrapper, what follows more closely 
+the spirit of OpenID spec, provides some handy methods and using as clear and
+commented code as possible. 
+
+No more you need squeezed openid through one method, enjoy same clarity as 
+you will find in OpenID spec, so when you start request then you use method
+begin_openid (aliased to create_openid) and when you complete your request, 
+then use method complete_openid. 
+
+Just for note this wrapper is made openid only in mind, so that's why it
+might not be the quickest fit for you if you also need old way of 
+username-password authentication. 
 
 
 Installation
 ============
 
 NB! OPENID WRAPPER IS NOT READY, SO NO GEM INSTALL YET!
-I pushed it up for people who would like to review code and give some ideas to improve this initial stuff. 
-
+I pushed it up with git for people who would like to review the code and give 
+some ideas to improve this initial stuff. 
 
 Start with:
 
@@ -27,18 +36,26 @@ Then add it to config/environment.rb:
 Additional Notes
 ================
 
-OpenID is pushed to three different hostings:
+OpenID Wrapper will generate log entry:
+  
+  ** openid_wrapper: initialized properly.
+
+
+How to contribute?
+==================
+
+You are welcome to clone it at your favourite git repository:
 
   main repository: 
     http://gitorious.org/projects/openid-wrapper
 
-  secondary repositories: 
+  secondary repositories:
     http://rubyforge.org/projects/openid-wrapper/ 
     http://github.com/priit/openid-wrapper/
 
-OpenID Wrapper will generate log entry:
-  
-  ** openid_wrapper: initialized properly.
+Check out TODO file to find out some pending tasks or do whatever you
+like to improve. Just send merge request, when you like to push
+your improvements. 
 
 
 General Info about OpenID
@@ -51,13 +68,12 @@ http://openid.net/specs/openid-authentication-2_0.html
 History and Credits
 ===================
 
- * OpenID Authentication plugin stared by David Heinemeier Hansson. [1]
- * Alex Gorbatchev made rewrite and complete clean up without changing original API. [2]
- * Priit Tamboom made complete API change as well and gemified it. [3]
+ * OpenID Authentication plugin stared by David Heinemeier Hansson.[1]
+ * Alex Gorbatchev made complete clean up without changing original API.[2]
+ * Priit Tamboom made complete API change as well and gemified it.[3]
 
 [1] http://svn.rubyonrails.org/rails/plugins/open_id_authentication/
 [2] http://code.google.com/p/open-id-authentication/
 [3] http://gitorious.org/projects/openid-wrapper/ 
 
 Copyright (c) 2008 Priit Tamboom, released under the MIT license
-
