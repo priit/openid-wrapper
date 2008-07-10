@@ -19,7 +19,7 @@ protected
     identifier = options[:openid_identifier]  || params[:openid_identifier]
     return_url = options[:return_url]         || complete_sessions_url
     error_redirect = options[:error_redirect] || new_user_path
-    realm      = options[:realm]              || (self.request.protocol + '*.' + self.request.domain)
+    realm      = options[:realm]              || current_realm
     immediate  = options[:immediate_mode]     || params[:immediate_mode] || false
 
     # return_to_args is for additional stuff you need to pass around to complete method,
@@ -51,21 +51,20 @@ protected
   alias :begin_openid :create_openid
   
   def complete_openid
+    # For wrapper DEVS: 
     # The return_to and its arguments are verified, so you need to pass in
     # the base URL and the arguments.  With Rails, the params method mashes
     # together parameters from GET, POST, and the path, so you'll need to pull
     # off the "path parameters"
     params_without_paths = params.reject {|key,value| request.path_parameters.include?(key)}
     
-    # current_url: Extract the URL of the current request from your
-    # application's web request framework and specify it here to have it
-    # checked against the openid.return_to value in the response.  Do not
+    # For wrapper DEVS: 
+    # about current_realm from OpenID gem: Extract the URL of the current 
+    # request from your application's web request framework and specify it here
+    # to have it checked against the openid.return_to value in the response.  Do not
     # just pass <tt>args['openid.return_to']</tt> here; that will defeat the
     # purpose of this check.  (See OpenID Authentication 2.0 section 11.1.)
-    # 
-    # current_url will be checked against the opeinid.return_to value in the response.
-    current_url = request.protocol + request.host_with_port + request.relative_url_root + request.path
-    @openid_response = consumer.complete(params_without_paths, current_url)
+    @openid_response = consumer.complete(params_without_paths, current_realm)
     return @openid_response
   end
   
@@ -75,8 +74,11 @@ protected
     simple_registration = OpenID::SReg::Response.from_success_response(@openid_response).data
     openid_params = HashWithIndifferentAccess.new(simple_registration)
 
-    # What are differences between display_identifier vs identity_url according ruby-openid library:
-    # Use display_identifier for user interface and use identity_url for querying your database or 
+    # For wrapper USERS: 
+    # What are differences between display_identifier vs identity_url? 
+    # according to OpenID gem:
+    # Use display_identifier for user interface and 
+    # use identity_url for querying your database or 
     # authorization server or other identifier equality comparisons.
     #
     # Our case we map display_identifier to openid_params[:openid] and
@@ -110,6 +112,12 @@ private
     sreg_request.request_fields(required, true) if required.size > 0
     sreg_request.request_fields(optional, false) if optional.size > 0
     return sreg_request
+  end
+
+  # For Wrapper DEVS:
+  # current_realm will be checked against openid.return_to value. Read more from method complete_openid.
+  def current_realm
+    request.protocol + request.host_with_port + request.relative_url_root + request.path
   end
 
   def add_return_to_args(args)
