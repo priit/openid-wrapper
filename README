@@ -52,11 +52,13 @@ Add to app/views/users/new.html.haml:
     = submit_tag 'Login'
 
 
-Additional Notes
-================
+Additional Tips and Notes
+=========================
 
-OpenID Wrapper will generate log entry:
-  
+* Make OpenID identifier field more nuby friendly and 
+add OpenID official selector from https://www.idselector.com/
+
+* OpenID Wrapper will generate log entry:
   ** openid_wrapper: initialized properly.
 
 
