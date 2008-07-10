@@ -45,6 +45,12 @@ Add to config/routes.rb:
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
 
+Add to app/views/users/new.html.haml:
+
+  - form_tag sessions_path do
+    = text_field_tag :openid_identifier
+    = submit_tag 'Login'
+
 
 Additional Notes
 ================
