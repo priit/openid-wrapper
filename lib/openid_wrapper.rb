@@ -9,10 +9,10 @@ module OpenidWrapper
   end
 
 protected
-  def create_openid(options = {}, &check_user)
+  def begin_openid(options = {}, &check_user)
     options.assert_valid_keys(
       :openid_identifier, :return_url, :error_redirect, :realm,
-      :immediate_mode, :required, :optional, :return_to_args
+      :immediate_mode, :required, :optional, :params
     )
     
     # trying to be as flexible as possible
@@ -21,10 +21,6 @@ protected
     error_redirect = options[:error_redirect] || new_user_path
     realm      = options[:realm]              || current_realm
     immediate  = options[:immediate_mode]     || params[:immediate_mode] || false
-
-    # return_to_args is for additional stuff you need to pass around to complete method,
-    # it serves similar prupose as session
-    return_to_args = options[:return_to_args] || {}
 
     begin
       @openid_request = consumer.begin(identifier.strip)
@@ -43,12 +39,16 @@ protected
       yield normalized_identifier
     end
 
-    add_return_to_args(return_to_args)
+    # For Wrapper USERS:
+    # You can pass arguments to params, so you can access at complete_openid with openid_params or with rails params.
+    # Example: begin_openid :params => {:subdomain => params[:subdomain]} in your create method and
+    # in you can access them at complete method like openid_params[:subdomain] or params[:subdomain].
+    add_to_params(options[:params])
 
     redirect_to @openid_request.redirect_url(realm, return_url, immediate)
   end
   
-  alias :begin_openid :create_openid
+  alias :create_openid :begin_openid
   
   def complete_openid
     # For wrapper DEVS: 
@@ -68,25 +68,27 @@ protected
     return @openid_response
   end
   
+  # For wrapper USERS:
+  # openid_params is just a helper method to filter out openid parameters from params, so
+  # you can directly save them to user model. By the way, you can access all them 
+  # directly from rails params as well.
   def openid_params
     return nil if @openid_response.nil?
 
     simple_registration = OpenID::SReg::Response.from_success_response(@openid_response).data
-    openid_params = HashWithIndifferentAccess.new(simple_registration)
+    local_params = HashWithIndifferentAccess.new(simple_registration)
 
     # For wrapper USERS: 
-    # What are differences between display_identifier vs identity_url? 
-    # according to OpenID gem:
-    # Use display_identifier for user interface and 
-    # use identity_url for querying your database or 
+    # Use openid_params[:openid] for user interface and 
+    # use openid_params[:openid_identifier] for querying your database or 
     # authorization server or other identifier equality comparisons.
-    #
-    # Our case we map display_identifier to openid_params[:openid] and
-    # identity_url to openid_params[:openid_identifier]
-    openid_params.merge!(:openid => @openid_response.display_identifier)
-    openid_params.merge!(:openid_identifier => @openid_response.identifier_url)
+    local_params.merge!(:openid => @openid_response.display_identifier)
+    local_params.merge!(:openid_identifier => @openid_response.identity_url)
+    
+    # Add custom params to openid_params pool.
+    local_params.merge!(@openid_response.message.get_args(:bare_namespace))
 
-    return openid_params
+    return local_params
   end  
   
 private
@@ -120,8 +122,9 @@ private
     request.protocol + request.host_with_port + request.relative_url_root + request.path
   end
 
-  def add_return_to_args(args)
+  def add_to_params(args)
     return nil if @openid_request.nil?
+    return nil if args.nil?
     
     args.each do |key,value|
       @openid_request.return_to_args[key.to_s] = value.to_s
