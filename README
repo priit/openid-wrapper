@@ -1,20 +1,31 @@
+
 OpenidWrapper
 =============
 
-Thin OpenID Wrapper for Ruby on Rails using ruby-openid gem.
+Thin OpenID Consumer Wrapper for Ruby on Rails using ruby-openid gem.
+
+
+SHORT STORY
+-----------
+
+It helps to keep your session controller nice and clean and provides
+some handy methods such as begin_openid, complete_openid and openid_params.
+
+
+LONGS STORY
+-----------
 
 The goal is to have openid consumer wrapper, what follows more closely 
-the spirit of OpenID spec, provides some handy methods and using as clear and
-commented code as possible. 
+the spirit of OpenID spec and the same time provides some handy methods. 
 
-No more you need squeezed openid through one method, enjoy same clarity as 
-you will find in OpenID spec, so when you start request then you use method
-begin_openid (aliased to create_openid) and when you complete your request, 
-then use method complete_openid. 
+No more you need squeezed openid through one method as in the original plugin, 
+enjoy same clarity as you will find in OpenID spec, so it means when you start request
+then you just use method begin_openid (aliased to create_openid) and when you complete
+your request, then use method complete_openid. 
 
-Just for note this wrapper is made openid only in mind, so that's why it
+note: this wrapper is made openid only in mind, so that's why it
 might not be the quickest fit for you if you also need old way of 
-username-password authentication. 
+username-password authentication, however they play nice together if you want so. 
 
 
 Installation
@@ -23,6 +34,8 @@ Installation
 NB! OPENID WRAPPER IS NOT READY, SO NO GEM INSTALL YET!
 I pushed it up with git for people who would like to review the code and give 
 some ideas to improve this initial stuff. 
+
+First you need Rails 2.1.0 or newer.
 
 Start with:
 
@@ -44,6 +57,15 @@ Add to config/routes.rb:
   map.signup '/signup', :controller => 'users', :action => 'new'
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
+
+Add to app/controller/sessions_controller.rb # Look how slim and clean controller :-)
+  def create
+    begin_openid
+  end
+
+  def complete
+    complete_openid
+  end
 
 Add to app/views/users/new.html.haml:
 
@@ -89,7 +111,7 @@ http://openid.net/specs/openid-authentication-2_0.html
 History and Credits
 ===================
 
- * OpenID Authentication plugin stared by David Heinemeier Hansson.[1]
+ * OpenID Authentication plugin started by David Heinemeier Hansson.[1]
  * Alex Gorbatchev made complete clean up without changing original API.[2]
  * Priit Tamboom made complete API change as well and gemified it.[3]
 
