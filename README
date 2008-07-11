@@ -12,7 +12,7 @@ It helps to keep your session controller nice and clean and provides
 some handy methods such as begin_openid, complete_openid and openid_params.
 
 
-LONGS STORY
+LONG STORY
 -----------
 
 The goal is to have openid consumer wrapper, what follows more closely 
