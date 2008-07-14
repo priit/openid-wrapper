@@ -29,7 +29,7 @@ module Authentication
 
 # before_filters for controllers
   def login_required
-    redirect_to login_path if !logged_in?
+    redirect_to login_path if not logged_in?
   end
 
   def admin_required
