@@ -12,21 +12,30 @@ protected
   def begin_openid(options = {}, &check_user)
     options.assert_valid_keys(
       :openid_identifier, :return_url, :error_redirect, :realm,
-      :immediate_mode, :required, :optional, :params
+      :immediate_mode, :required, :optional,
+
+    # You can pass arguments to openid_params, so you can access it from complete_openid with openid_params.
+    # Example: begin_openid :params => {:subdomain => params[:subdomain]} in your create method and
+    # in you can access them at complete method like openid_params[:subdomain] or params[:subdomain].
+      :openid_params, 
+ 
+    # redirect_to is sugar shortcut instead of writing :openid_params => {:redirect_to => params[:redirect_to]}
+    # later you can access it from openid_params[:redirect_to]
+      :redirect_to 
     )
-    
+ 
     # trying to be as flexible as possible
     identifier = options[:openid_identifier]  || params[:openid_identifier]
     return_url = options[:return_url]         || complete_sessions_url
-    error_redirect = options[:error_redirect] || new_user_path
+    error_redirect = options[:error_redirect] || '/'
     realm      = options[:realm]              || current_realm
     immediate  = options[:immediate_mode]     || params[:immediate_mode] || false
-
+    
     begin
       @openid_request = consumer.begin(identifier.strip)
     rescue OpenID::OpenIDError => e
       flash[:error] = "Discovery failed for #{identifier}: #{e}"
-      return redirect_to error_redirect
+      return redirect_back_or(error_redirect)
     end
     
     required = options[:required] || params[:required]
@@ -39,11 +48,8 @@ protected
       yield normalized_identifier
     end
 
-    # For Wrapper USERS:
-    # You can pass arguments to params, so you can access at complete_openid with openid_params or with rails params.
-    # Example: begin_openid :params => {:subdomain => params[:subdomain]} in your create method and
-    # in you can access them at complete method like openid_params[:subdomain] or params[:subdomain].
     add_to_params(options[:params])
+    add_to_params(:redirect_to => params[:redirect_to]) unless params[:redirect_to].nil?
 
     redirect_to @openid_request.redirect_url(realm, return_url, immediate)
   end

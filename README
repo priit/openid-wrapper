@@ -53,7 +53,7 @@ Add to config/routes.rb:
   # so we need complete action as well.
   map.resources :sessions, :collection => {:complete => :get}
 
-  # handy shortcuts, you can use as link_to 'Signup', signup_path
+  # some handy shortcuts, you can use as link_to 'Signup', signup_path
   map.signup '/signup', :controller => 'users', :action => 'new'
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
