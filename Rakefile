@@ -20,3 +20,8 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('README')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+desc 'Custom git push deploy'
+task :push do
+  `git push origin master && git push github master`
+end
