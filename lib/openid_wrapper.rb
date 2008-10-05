@@ -71,6 +71,10 @@ protected
     # just pass <tt>args['openid.return_to']</tt> here; that will defeat the
     # purpose of this check.  (See OpenID Authentication 2.0 section 11.1.)
     @openid_response = consumer.complete(params_without_paths, current_realm)
+
+    # Add openid params to params[:openid]
+    params[:openid] = openid_params
+
     return @openid_response
   end
   
@@ -93,7 +97,7 @@ protected
     
     # Add custom params to openid_params pool.
     local_params.merge!(@openid_response.message.get_args(:bare_namespace))
-
+    
     return local_params
   end  
   
