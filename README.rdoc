@@ -108,8 +108,8 @@ http://openid.net/specs/openid-authentication-2_0.html
  * Alex Gorbatchev made complete clean up without changing original API.[2]
  * Priit Tamboom made complete API change as well and gemified it.[3]
 
-[1] http://svn.rubyonrails.org/rails/plugins/open_id_authentication/
-[2] http://code.google.com/p/open-id-authentication/
-[3] http://gitorious.org/projects/openid-wrapper/ 
+1. http://svn.rubyonrails.org/rails/plugins/open_id_authentication/
+2. http://code.google.com/p/open-id-authentication/
+3. http://gitorious.org/projects/openid-wrapper/ 
 
 Copyright (c) 2008 Priit Tamboom, released under the MIT license
