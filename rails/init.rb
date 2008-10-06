@@ -6,7 +6,6 @@ end
 
 config.to_prepare do
   ActionController::Base.send :include, OpenidWrapper
-  ActionController::Base.send :include, Authentication
 end
 
 RAILS_DEFAULT_LOGGER.info "** openid_wrapper: initialized properly."

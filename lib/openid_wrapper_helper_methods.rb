@@ -1,2 +1,0 @@
-module OpenidWrapperHelperMethods
-end

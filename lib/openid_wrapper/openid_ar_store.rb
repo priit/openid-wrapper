@@ -1,5 +1,5 @@
-require 'association'
-require 'nonce'
+require File.expand_path(File.dirname(__FILE__) + '/association')
+require File.expand_path(File.dirname(__FILE__) + '/nonce')
 require 'openid/store/interface'
 
 # not in OpenID module to avoid namespace conflict
