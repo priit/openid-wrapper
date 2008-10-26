@@ -52,7 +52,7 @@ Add to config/routes.rb:
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
 
-Add to app/controller/sessions_controller.rb # Look how slim and clean controller :-)
+Add to app/controller/sessions_controller.rb
   def create
     begin_openid # you can change defaults like :return_url => complete_sessions_url etc
                  # take a look lib/openid_wrapper/openid_wrapper.rb def begin_openid
