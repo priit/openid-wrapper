@@ -28,26 +28,23 @@ username-password authentication, however they play nice together if you want so
 
 = Installation
 
-NB! OPENID WRAPPER IS BETA, SO NO GEM YET!
-I pushed it up with git for people who would like to review the code and give 
-some ideas to improve this initial stuff. 
-
 First you need Rails 2.1.0 or newer.
 
 Start with:
 
-  sudo gem install openid-wrapper
+  gem sources -a http://gems.github.com
+  sudo gem install priit-openid_wrapper
 
 Add to config/environment.rb:
 
-  config.gem 'openid_wrapper'
+  config.gem 'priit-openid_wrapper', :lib => 'openid_wrapper', :source => 'http://gems.github.com'
 
 Add to config/routes.rb:
   
   map.resources :users
 
-  # unfortunatly OpenID spec does not honor RESTful design,
-  # so we need complete action as well.
+  # OpenID spec does not honor RESTful design,
+  # so we need add complete action as well.
   map.resources :sessions, :collection => {:complete => :get}
 
   # some handy shortcuts, you can use as link_to 'Signup', signup_path
@@ -57,11 +54,28 @@ Add to config/routes.rb:
 
 Add to app/controller/sessions_controller.rb # Look how slim and clean controller :-)
   def create
-    begin_openid
+    begin_openid # you can change defaults like :return_url => complete_sessions_url etc
+                 # take a look lib/openid_wrapper/openid_wrapper.rb def begin_openid
   end
 
   def complete
-    complete_openid
+    case complete_openid.status
+      when :success
+        user = User.find_by_openid_identifier(params[:openid][:openid_identifier])
+        if user.nil?
+          user = User.create(params[:openid])
+        end
+        session[:current_user_id] = user.id
+        flash[:success] = "Logged in succesfully!"
+        return redirect_to root_path
+      when :failure
+        flash[:error] = 'Something went wrong!'
+      when :cancel
+        flash[:error] = 'Openid login cancelled!' 
+      when :setup_needed
+        flash[:notice] = 'Openid setup needed!'
+      end
+    return redirect_to root_path
   end
 
 Add to app/views/users/new.html.haml:
@@ -84,12 +98,9 @@ add OpenID official selector from https://www.idselector.com/
 
 You are welcome to clone it at your favourite git repository:
 
-  main repository: 
     http://gitorious.org/projects/openid-wrapper
-
-  secondary repositories:
-    http://rubyforge.org/projects/openid-wrapper/ 
     http://github.com/priit/openid-wrapper/
+    http://rubyforge.org/projects/openid-wrapper/ 
 
 Check out TODO file to find out some pending tasks or do whatever you
 like to improve. Just send merge request, when you like to push

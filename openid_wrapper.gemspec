@@ -1,7 +1,7 @@
 Gem::Specification.new do |spec|
   spec.name    = 'openid_wrapper'
-  spec.version = '0.1.6'
-  spec.date    = '2008.10.18'
+  spec.version = '0.1.7'
+  spec.date    = '2008.10.26'
 
   spec.summary = 'Openid wrapper for Rails'
   spec.description = 'Openid wrapper for Rails yeah'
@@ -16,5 +16,4 @@ Gem::Specification.new do |spec|
   spec.rdoc_options = ['--main', 'README.rdoc']
   spec.rdoc_options << '--inline-source' << '--charset=UTF-8'
   spec.extra_rdoc_files = ['README.rdoc', 'MIT-LICENSE', 'CHANGELOG.rdoc']
-  spec.files = Dir['**/*']
 end

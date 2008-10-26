@@ -1,3 +1,1 @@
-== 0.1.4, released 2008-10-06
-
-* Cleanup
+please use 'git log' for changes
