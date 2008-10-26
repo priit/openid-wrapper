@@ -1,7 +1,7 @@
 Gem::Specification.new do |spec|
   spec.name    = 'openid_wrapper'
-  spec.version = '0.1.4'
-  spec.date    = '2008.10.06'
+  spec.version = '0.1.6'
+  spec.date    = '2008.10.18'
 
   spec.summary = 'Openid wrapper for Rails'
   spec.description = 'Openid wrapper for Rails yeah'
