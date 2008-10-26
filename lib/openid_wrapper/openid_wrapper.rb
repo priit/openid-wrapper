@@ -27,7 +27,7 @@ protected
     # trying to be as flexible as possible
     identifier = options[:openid_identifier]  || params[:openid_identifier] || ''
     return_url = options[:return_url]         || complete_sessions_url
-    error_redirect = options[:error_redirect] || '/'
+    error_redirect = options[:error_redirect] || request.env['HTTP_REFERER'] || '/'
     realm      = options[:realm]              || current_realm
     immediate  = options[:immediate_mode]     || params[:immediate_mode] || false
     
@@ -35,7 +35,7 @@ protected
       @openid_request = consumer.begin(identifier.strip)
     rescue OpenID::OpenIDError => e
       flash[:error] = "Discovery failed for #{identifier}: #{e}"
-      return redirect_back_or(error_redirect)
+      return redirect_to(error_redirect)
     end
     
     required = options[:required] || params[:required]
@@ -92,11 +92,14 @@ protected
     # Use openid_params[:openid] for user interface and 
     # use openid_params[:openid_identifier] for querying your database or 
     # authorization server or other identifier equality comparisons.
-    local_params.merge!(:openid => @openid_response.display_identifier)
+
+    # DOTO: I have to find out how much is display_identifier used before using it with identifier.
+    # local_params.merge!(:openid => @openid_response.display_identifier)
     local_params.merge!(:openid_identifier => @openid_response.identity_url)
     
+    # DOTO: find out other way to access openid_params pool.
     # Add custom params to openid_params pool.
-    local_params.merge!(@openid_response.message.get_args(:bare_namespace))
+    # local_params.merge!(@openid_response.message.get_args(:bare_namespace))
     
     return local_params
   end  
