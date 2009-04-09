@@ -132,7 +132,7 @@ private
   # For Wrapper DEVS:
   # current_realm will be checked against openid.return_to value. Read more from method complete_openid.
   def current_realm
-    request.protocol + request.host_with_port + request.relative_url_root + request.path
+    request.protocol + request.host_with_port + request.path
   end
 
   def add_to_params(args)
